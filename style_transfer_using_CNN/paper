@@ -1,0 +1,9 @@
+https://rn-unison.github.io/articulos/style_transfer.pdf
+code
+https://github.com/ndb796/Deep-Learning-Paper-Review-and-Practice/blob/master/code_practices/Style_Transfer_Tutorial.ipynb
+
+                        for downsampling in instance.children():
+                            if isinstance(downsampling, nn.Conv2d):
+                                name = 'conv_{}'.format(i)
+                            elif isinstance(downsampling, nn.BatchNorm2d):
+                                name = 'bn_{}'.format(i)
