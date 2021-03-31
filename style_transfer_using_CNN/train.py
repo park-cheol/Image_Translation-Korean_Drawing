@@ -275,7 +275,7 @@ def get_content_losses(cnn, content_img, noise_image):
 '''
 def content_reconstruction(cnn, content_img, input_img, iters):
     model, content_losses = get_content_losses(cnn, content_img, input_img)
-    optimizer = optim.LBFGS([input_img.requires_grad_()])
+    optimizer = optim.Adam([input_img.requires_grad_()])
 
     print("[ Start ]")
 
@@ -318,7 +318,7 @@ input_img = torch.empty_like(content_img).uniform_(0, 1).to(device)
 output = content_reconstruction(cnn, content_img=content_img, input_img=input_img, iters=10)
 '''
 content_layers = ['conv_1']
-style_layers = ['conv_4', 'conv_10', 'conv_20', 'conv_28']
+style_layers = ['conv_1', 'conv_10', 'conv_20', 'conv_30']
 # 0 12 34 56
 
 # Style Transfer 손실(loss)을 계산하는 함수
@@ -407,7 +407,7 @@ def style_transfer(cnn, content_img, style_img, input_img, iters):
         # optimizer.step(closure) closure : gradient
         def closure():
             if run[0] % 5000 == 0:
-                save_image(input_img.cpu().detach()[0], 'image/output4_%s.png' % (run[0]))
+                save_image(input_img.cpu().detach()[0], 'image/output5_%s.png' % (run[0]))
                 print("이미지저장")
             input_img.data.clamp_(0, 1)
 
@@ -420,7 +420,7 @@ def style_transfer(cnn, content_img, style_img, input_img, iters):
             for sl in style_losses:
                 style_score += sl.loss
 
-            style_score *= 1e5
+            style_score *= 1
             loss = content_score + style_score
             loss.backward()
 
