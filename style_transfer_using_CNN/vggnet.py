@@ -317,7 +317,7 @@ input_img = torch.empty_like(content_img).uniform_(0, 1).to(device)
 # content reconstruction 수행
 output = content_reconstruction(cnn, content_img=content_img, input_img=input_img, iters=10)
 '''
-content_layers = ['conv_1']
+content_layers = ['conv_5']
 style_layers = ['conv_1', 'conv_3', 'conv_5', 'conv_9', 'conv_15']
 # 0 12 34 56
 
@@ -401,7 +401,7 @@ def style_transfer(cnn, content_img, style_img, input_img, iters):
             for sl in style_losses:
                 style_score += sl.loss
 
-            style_score *= 1
+            style_score *= 1e5
             loss = content_score + style_score
             loss.backward()
 

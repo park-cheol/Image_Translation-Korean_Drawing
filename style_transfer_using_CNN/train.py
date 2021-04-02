@@ -406,7 +406,7 @@ def style_transfer(cnn, content_img, style_img, input_img, iters):
         # closure : contentloss와 styleloss를 같이 계산하고 더해주기 위한 loss
         # optimizer.step(closure) closure : gradient
         def closure():
-            if run[0] % 5000 == 0:
+            if run[0] % 10 == 0:
                 save_image(input_img.cpu().detach()[0], 'image/output5_%s.png' % (run[0]))
                 print("이미지저장")
             input_img.data.clamp_(0, 1)
@@ -420,7 +420,7 @@ def style_transfer(cnn, content_img, style_img, input_img, iters):
             for sl in style_losses:
                 style_score += sl.loss
 
-            style_score *= 1
+            style_score *= 1e5
             loss = content_score + style_score
             loss.backward()
 
