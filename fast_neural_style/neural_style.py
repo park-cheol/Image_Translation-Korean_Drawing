@@ -19,6 +19,7 @@ import torch.onnx # caffe 사용시 사용 우리는 pytorch사용
 import utils
 from transformer_net import TransformerNet
 from vgg import Vgg16
+import cv2 as cv
 
 def check_paths(args):
     try:
@@ -61,7 +62,9 @@ def train(args):
     #def load_image(filename, size=None, scale=None):
     style = utils.load_image(args.style_image, size=args.style_size)
     style = style_transform(style) # 전처리
-    style = style.repeat(args.batch_size, 1, 1, 1).to(device) #TODO repeat함수 뭐지보기
+    style = style.repeat(args.batch_size, 1, 1, 1).to(device)
+    # batch 목적 차원 하나 늘리고, 1,1,1은 각 그 차원에 곱을 해줌
+    # [3, 512 ,512] -> [128, 2, 1, 1] -> [128, 6, 512, 512]
 
     # style(img) 정규화하고 vgg
     features_style = vgg(utils.normalize_batch(style))
@@ -77,7 +80,7 @@ def train(args):
         for batch_id, (x, _) in enumerate(train_loader):
             # batch_id = iteration  x[batch, channels ,size, size]
             n_batch = len(x) # tensor[128 ,3, 64 ,64] 경우 ==> len(x)=128 배치크기나타냄
-            count += n_batch
+            count += n_batch # 1루프마다 배치 더하니까 iteration
             optimizer.zero_grad()
 
             # COCO dataset
@@ -90,7 +93,7 @@ def train(args):
             features_y = vgg(y)
             features_x = vgg(x)
 
-            #TODO ??
+
             content_loss = args.content_weight * mse_loss(features_y.relu2_2, features_x.relu2_2)
 
             style_loss = 0.
@@ -183,7 +186,7 @@ def main():
                                   help="path to folder where trained model will be saved.")
     train_arg_parser.add_argument("--checkpoint-model-dir", type=str, default=None,
                                   help="path to folder where checkpoints of trained models will be saved")
-    train_arg_parser.add_argument("--image-size", type=int, default=512,
+    train_arg_parser.add_argument("--image-size", type=int, default=256,
                                   help="size of training images, default is 512 X 512")
     train_arg_parser.add_argument("--style-size", type=int, default=None,
                                   help="size of style-image, default is the original size of style image")

@@ -21,7 +21,7 @@ def load_image(filename, size=None, scale=None):
     return img
 
 def save_image(filename, data):
-    img = data.clone.clamp(0, 255).numpy() # 픽셀 값범위 맞춰주기 위해
+    img = data.clone().clamp(0, 255).numpy() # 픽셀 값범위 맞춰주기 위해
     # Tensor [C, H, W] img [H, W, C]
     img = img.transpose(1, 2, 0).astype("uint8")
     # astpye로 dtype 변환 가능 uint8은 부호가없는 8비트 정수 (<=> int8 부호가있는 8비트 정수)
